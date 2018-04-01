@@ -1004,6 +1004,9 @@ class RsvpMeetupView(FormValidMessageMixin, FormInvalidMessageMixin, LoginRequir
         self.meetup = get_object_or_404(Meetup, slug=self.kwargs['meetup_slug'])
         kwargs.update({'user': self.request.user})
         kwargs.update({'meetup': self.meetup})
+        qs = Rsvp.objects.filter(user__user=self.request.user, meetup=self.meetup)
+        if qs.exists():
+            kwargs.update({'instance': qs.first()})
         return kwargs
 
     def get_context_data(self, **kwargs):
